@@ -29,6 +29,9 @@ if DETECT_MODE == "similar":
 elif DETECT_MODE == "equal":
     def compare_image(img1, img2):
         return np.array_equal(img1, img2)
+else:
+    print("Invalid DETECT_MODE.")
+    exit()
 
 mode = input("Enter the map form (1 for json, 2 for image): ")
 if mode == "1":
