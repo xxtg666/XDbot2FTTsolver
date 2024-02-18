@@ -1,4 +1,3 @@
-import os
 from xdbot_const import *
 import xdbot_search
 import xdbot_image
@@ -7,8 +6,8 @@ import PIL.Image as I
 import numpy as np
 import copy
 
-def images_are_equal(img1, img2):
-    return np.array_equal(img1, img2)
+DETECT_MODE = "equal"
+SIMILAR_THRESHOLD = 0.6
 
 image_reflection = {
     NULL: np.array(I.open("resources/stone_bricks.png").convert('RGB')),
@@ -19,6 +18,17 @@ image_reflection = {
     SAND: np.array(I.open("resources/sand.png").convert('RGB')),
     COBWEB: np.array(I.open("resources/cobweb.png").convert('RGB'))
 }
+
+if DETECT_MODE == "similar":
+    from skimage.metrics import structural_similarity as ssim
+    def compare_image(img1, img2, threshold=SIMILAR_THRESHOLD):
+        if img1.shape != img2.shape:
+            return False
+        s = ssim(img1, img2, channel_axis=2, multichannel=True)
+        return s >= threshold
+elif DETECT_MODE == "equal":
+    def compare_image(img1, img2):
+        return np.array_equal(img1, img2)
 
 mode = input("Enter the map form (1 for json, 2 for image): ")
 if mode == "1":
@@ -40,11 +50,13 @@ elif mode == "2":
             crop_image = ftt_image.crop(area)
             crop_type = UNKNOWN
             for _type in image_reflection:
-                if images_are_equal(image_reflection[_type], np.array(crop_image)):
+                if compare_image(image_reflection[_type], np.array(crop_image)):
                     crop_type = _type
                     break
             if crop_type == UNKNOWN:
                 print("Invalid image content.")
+                if DETECT_MODE == "equal":
+                    print("You may change the DETECT_MODE to 'similar' if the image is not clear.")
                 exit()
             if crop_type == START or crop_type == TERMINAL:
                 del image_reflection[crop_type]
@@ -71,7 +83,7 @@ temp_imgs = []
 for i in range(len(solution[0])+1):
     temp_map = copy.deepcopy(solution[1][i])
     temp_map[solution[2][i][0]][solution[2][i][1]] = START
-    print("Saved game map",i,":",solution[1][i])
+    print("Saved game map",i,":",temp_map)
     temp_imgs.append(xdbot_image.generate(temp_map))
     temp_imgs[0].save("temp.gif", save_all=True, append_images=temp_imgs[1:], duration=500, loop=0)
 print("Gif saved as temp.gif")
