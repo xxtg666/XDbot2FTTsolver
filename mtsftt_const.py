@@ -1,0 +1,5 @@
+NULL = "null"
+WALL = "wall"
+PISTON = "piston"
+SAND = "sand"
+COBWEB = "cobweb"

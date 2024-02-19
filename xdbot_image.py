@@ -4,13 +4,13 @@ from PIL import Image
 from xdbot_const import *
 
 BLOCKS = {
-    NULL: Image.open("resources/stone_bricks.png"),
-    WALL: Image.open("resources/bricks.png"),
-    START: Image.open("resources/iron_block.png"),
-    TERMINAL: Image.open("resources/diamond_block.png"),
-    PISTON: Image.open("resources/piston_top.png"),
-    SAND: Image.open("resources/sand.png"),
-    COBWEB: Image.open("resources/cobweb.png")
+    NULL: Image.open("xdbot_resources/stone_bricks.png"),
+    WALL: Image.open("xdbot_resources/bricks.png"),
+    START: Image.open("xdbot_resources/iron_block.png"),
+    TERMINAL: Image.open("xdbot_resources/diamond_block.png"),
+    PISTON: Image.open("xdbot_resources/piston_top.png"),
+    SAND: Image.open("xdbot_resources/sand.png"),
+    COBWEB: Image.open("xdbot_resources/cobweb.png")
 }
 
 def generate(game_map: list[list[int]]):
